@@ -16,13 +16,19 @@ import {
     UserEventCommand
 } from '../common/Command';
 import {
-    createAudioMessage, createCustomerMessage,
-    createEmojiMessage, createFileMessage,
-    createImageMessage, createLocationMessage,
+    createAudioMessage,
+    createCustomerMessage,
+    createEmojiMessage,
+    createFileMessage,
+    createImageMessage,
+    createLocationMessage,
     createTextMessage,
     createVideoMessage
 } from '../utils/CreateMessage'
 import ConversationType from "../common/ConversationType";
+import {MessageReadPack} from "../pack/MessageReadPack";
+import {MessageReceiveAckPack} from "../pack/MessageReceiveAckPack";
+import {MessageRecallPack} from "../pack/MessageRecallPack";
 
 const loginTimeout = 10 * 1000 // 10 seconds
 const heartbeatInterval = 10 * 1000 // seconds
@@ -550,6 +556,49 @@ export class ImClient {
             setTimeout(loop, 500)
         }
         setTimeout(loop, 500)
+    }
+
+    // 发送消息已读
+    public sendP2PMessageRead(messageData: any) {
+        let messageReadPack = new MessageReadPack(this.userId, messageData, ConversationType.P2PMessage)
+        let sendMessageReadPack = imClient.buildMessagePack(MessageCommand.MSG_READED, messageReadPack)
+        if (this.conn) {
+            this.conn.send(sendMessageReadPack.pack(false));
+        }
+    }
+
+    public sendGroupMessageRead(messageData: any) {
+        let messageReadPack = new MessageReadPack(this.userId, messageData, ConversationType.GroupMessage)
+        let sendMessageReadPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP_READED, messageReadPack)
+        if (this.conn) {
+            this.conn.send(sendMessageReadPack.pack(false));
+        }
+    }
+
+    // 发送消息接收成功ACK
+    public sendMessageReceiveAck(messageData: any) {
+        let messageReceiveAckPack = new MessageReceiveAckPack(this.userId, messageData)
+        let sendMessageReceiveAck = imClient.buildMessagePack(MessageCommand.MSG_RECEIVE_ACK, messageReceiveAckPack);
+        if (this.conn) {
+            this.conn.send(sendMessageReceiveAck.pack(false));
+        }
+    }
+
+    // 发送消息撤回
+    public sendP2PMessageRecall(messageData: any) {
+        let messageRecallPack = new MessageRecallPack(this.userId, messageData, ConversationType.P2PMessage)
+        let sendMessageRecall = imClient.buildMessagePack(MessageCommand.MSG_RECALL, messageRecallPack);
+        if (this.conn) {
+            this.conn.send(sendMessageRecall.pack(false));
+        }
+    }
+
+    public sendGroupMessageRecall(messageData: any) {
+        let messageRecallPack = new MessageRecallPack(this.userId, messageData, ConversationType.GroupMessage)
+        let sendMessageRecall = imClient.buildMessagePack(MessageCommand.MSG_RECALL, messageRecallPack);
+        if (this.conn) {
+            this.conn.send(sendMessageRecall.pack(false));
+        }
     }
 
     // 发送单聊文本消息
