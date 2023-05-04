@@ -510,23 +510,122 @@ export class ImClient {
         }
     }
 
-    public getSingleUserInfo(uid: string): Promise<any> {
+    /*
+     *   用户相关操作
+     */
+    public getSingleUserInfo(): Promise<any> {
         return new Promise((resolve, _) => {
             let api = new HttpApi(this.httpUrl);
-            let resp = api.call("/user/data/getSingleUserInfo", this.getRequestParams(), {userId: uid})
+            let resp = api.call("/user/getSingleUserInfo", this.getRequestParams(), {
+                userId: this.userId
+            })
             resolve(resp);
         })
     }
 
-    public async syncGetUserInfo(userId: string[]) {
-        let api = new HttpApi(this.httpUrl);
-        return await api.call("/user/getUserInfo", this.getRequestParams(), {userIds: userId});
-    }
-
-    public getUserInfo(userId: string[]): Promise<any> {
+    public getUserInfo(userIds: string[]): Promise<any> {
         return new Promise((resolve, _) => {
             let api = new HttpApi(this.httpUrl);
-            let resp = api.call("/user/data/getUserInfo", this.getRequestParams(), {userIds: userId})
+            let resp = api.call("/user/getUserInfo", this.getRequestParams(), {userIds})
+            resolve(resp);
+        })
+    }
+
+    public modifyUserInfo(userData: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/modifyUserInfo", this.getRequestParams(), userData)
+            resolve(resp);
+        })
+    }
+
+    public getUserSequence(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/getUserSequence", this.getRequestParams(), {userId: this.userId})
+            resolve(resp);
+        })
+    }
+
+    public subscribeUserOnlineStatus(subTime: number, subUserId: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/subscribeUserOnlineStatus", this.getRequestParams(), {
+                subTime,
+                subUserId
+            })
+            resolve(resp);
+        })
+    }
+
+    public setUserCustomerStatus(customText: string, customStatus: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/setUserCustomerStatus", this.getRequestParams(), {
+                userId: this.userId,
+                customText,
+                customStatus
+            })
+            resolve(resp);
+        })
+    }
+
+    public queryUserOnlineStatus(userList: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/queryUserOnlineStatus", this.getRequestParams(), {
+                userList,
+                clientType: this.clientType,
+                imei: this.imei
+            })
+            resolve(resp);
+        })
+    }
+
+    public queryFriendOnlineStatus(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/user/queryFriendOnlineStatus", this.getRequestParams(), {
+                clientType: this.clientType,
+                imei: this.imei
+            })
+            resolve(resp);
+        })
+    }
+
+    /*
+     *  好友相关操作
+     */
+    public addFriend(toItem: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/add", this.getRequestParams(), {fromId: this.userId, toItem})
+            resolve(resp);
+        })
+    }
+
+    public updateFriend(toItem: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/update", this.getRequestParams(), {fromId: this.userId, toItem})
+            resolve(resp);
+        })
+    }
+
+    public deleteFriend(toId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/delete", this.getRequestParams(), {fromId: this.userId, toId})
+            resolve(resp);
+        })
+    }
+
+    public deleteAllFriend(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/deleteAll", this.getRequestParams(), {
+                fromId: this.userId,
+            })
             resolve(resp);
         })
     }
@@ -534,7 +633,409 @@ export class ImClient {
     public getAllFriend(): Promise<any> {
         return new Promise((resolve, _) => {
             let api = new HttpApi(this.httpUrl);
-            let resp = api.call("/friendship/getAllFriendShip", this.getRequestParams(), {fromId: this.userId})
+            let resp = api.call("/friendship/getAll", this.getRequestParams(), {fromId: this.userId})
+            resolve(resp);
+        })
+    }
+
+    public getRelation(toId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/getRelation", this.getRequestParams(), {
+                fromId: this.userId,
+                toId
+            })
+            resolve(resp);
+        })
+    }
+
+    public verifyFriendship(checkType: number, toIds: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/verify", this.getRequestParams(), {
+                fromId: this.userId,
+                checkType,
+                toIds
+            })
+            resolve(resp);
+        })
+    }
+
+    public blackFriend(toId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/black", this.getRequestParams(), {fromId: this.userId, toId})
+            resolve(resp);
+        })
+    }
+
+    public deleteBlackFriend(toId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/deleteBlack", this.getRequestParams(), {fromId: this.userId, toId})
+            resolve(resp);
+        })
+    }
+
+    public verifyBlack(checkType: number, toIds: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/verifyBlack", this.getRequestParams(), {
+                fromId: this.userId,
+                checkType,
+                toIds
+            })
+            resolve(resp);
+        })
+    }
+
+    public approveFriendshipRequest(id: number, status: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendshipRequest/approve", this.getRequestParams(), {
+                id,
+                status
+            })
+            resolve(resp);
+        })
+    }
+
+    public readFriendshipRequest(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendshipRequest/read", this.getRequestParams(), {
+                userId: this.userId
+            })
+            resolve(resp);
+        })
+    }
+
+    public getFriendshipRequest(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendshipRequest/get", this.getRequestParams(), {
+                userId: this.userId
+            })
+            resolve(resp);
+        })
+    }
+
+    public addFriendshipGroup(groupName: string, toIds: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/group/add", this.getRequestParams(), {
+                fromId: this.userId,
+                groupName,
+                toIds
+            })
+            resolve(resp);
+        })
+    }
+
+    public getAllFriendshipGroup(): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/group/getAll", this.getRequestParams(), {
+                fromId: this.userId,
+            })
+            resolve(resp);
+        })
+    }
+
+    public deleteFriendshipGroup(groupNames: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/group/delete", this.getRequestParams(), {
+                fromId: this.userId,
+                groupNames
+            })
+            resolve(resp);
+        })
+    }
+
+    public addFriendshipGroupMember(groupName: string, toIds: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/group/member/add", this.getRequestParams(), {
+                fromId: this.userId,
+                groupName,
+                toIds
+            })
+            resolve(resp);
+        })
+    }
+
+    public deleteFriendshipGroupMember(groupName: string, toIds: string[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/group/member/delete", this.getRequestParams(), {
+                fromId: this.userId,
+                groupName,
+                toIds
+            })
+            resolve(resp);
+        })
+    }
+
+    /*
+     *  群组相关操作
+     */
+    public createGroup(groupData: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/create", this.getRequestParams(), groupData)
+            resolve(resp);
+        })
+    }
+
+    public updateGroup(groupData: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/update", this.getRequestParams(), groupData)
+            resolve(resp);
+        })
+    }
+
+    public getJoinedGroup(limit: number, offset: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/getJoined", this.getRequestParams(), {
+                memberId: this.userId,
+                limit,
+                offset
+            })
+            resolve(resp);
+        })
+    }
+
+    public destroyGroup(groupId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/destroy", this.getRequestParams(), {
+                groupId
+            })
+            resolve(resp);
+        })
+    }
+
+    public transferGroup(groupId: string, ownerId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/transfer", this.getRequestParams(), {
+                groupId,
+                ownerId
+            })
+            resolve(resp);
+        })
+    }
+
+    public getGroupInfo(groupId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/get", this.getRequestParams(), {
+                groupId
+            })
+            resolve(resp);
+        })
+    }
+
+    public muteGroup(groupId: string, mute: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/mute", this.getRequestParams(), {
+                groupId,
+                mute
+            })
+            resolve(resp);
+        })
+    }
+
+    public addGroup(groupItem: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/add", this.getRequestParams(), {
+                fromId: this.userId,
+                groupItem
+            })
+            resolve(resp);
+        })
+    }
+
+    public addGroupMember(groupId: string, members: any[]): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/member/add", this.getRequestParams(), {
+                groupId,
+                clientType: this.clientType,
+                members
+            })
+            resolve(resp);
+        })
+    }
+
+    public removeGroupMember(groupId: string, memberId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/member/remove", this.getRequestParams(), {
+                groupId,
+                clientType: this.clientType,
+                memberId
+            })
+            resolve(resp);
+        })
+    }
+
+    public exitGroup(groupId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/member/exit", this.getRequestParams(), {
+                groupId
+            })
+            resolve(resp);
+        })
+    }
+
+    public updateGroupMember(groupId: string, memberId: string, role: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/member/update", this.getRequestParams(), {
+                groupId,
+                clientType: this.clientType,
+                memberId,
+                role
+            })
+            resolve(resp);
+        })
+    }
+
+    public muteGroupMember(groupId: string, memberId: string, speakDate: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/member/speak", this.getRequestParams(), {
+                groupId,
+                memberId,
+                speakDate
+            })
+            resolve(resp);
+        })
+    }
+
+    public addGroupRequest(groupItem: any): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/request/add", this.getRequestParams(), {
+                fromId: this.userId,
+                groupItem
+            })
+            resolve(resp);
+        })
+    }
+
+    public approveGroupRequest(id: number, status: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/request/approve", this.getRequestParams(), {
+                id,
+                status
+            })
+            resolve(resp);
+        })
+    }
+
+    public getGroupRequest(groupId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/request/get", this.getRequestParams(), {
+                groupId
+            })
+            resolve(resp);
+        })
+    }
+
+    public readGroupRequest(groupId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/request/read", this.getRequestParams(), {
+                groupId
+            })
+            resolve(resp);
+        })
+    }
+
+    /*
+     *  会话相关操作
+     */
+    public updateConversation(conversationId: string, isMute: number, isTop: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/conversation/updateConversation", this.getRequestParams(), {
+                fromId: this.userId,
+                clientType: this.clientType,
+                imei: this.imei,
+                conversationId,
+                isMute,
+                isTop
+            })
+            resolve(resp);
+        })
+    }
+
+    public deleteConversation(conversationId: string): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/conversation/deleteConversation", this.getRequestParams(), {
+                fromId: this.userId,
+                clientType: this.clientType,
+                imei: this.imei,
+                conversationId,
+            })
+            resolve(resp);
+        })
+    }
+
+    /*
+     * 同步相关操作
+     */
+    public syncFriendshipList(lastSequence: number, maxLimit: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/friendship/syncFriendshipList", this.getRequestParams(), {
+                lastSequence,
+                maxLimit
+            })
+            resolve(resp);
+        })
+    }
+
+    public syncConversationList(lastSequence: number, maxLimit: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/conversation/syncConversationList", this.getRequestParams(), {
+                lastSequence,
+                maxLimit
+            })
+            resolve(resp);
+        })
+    }
+
+    public syncJoinedGroup(lastSequence: number, maxLimit: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/group/syncJoinedGroup", this.getRequestParams(), {
+                lastSequence,
+                maxLimit
+            })
+            resolve(resp);
+        })
+    }
+
+    public syncOfflineMessage(lastSequence: number, maxLimit: number): Promise<any> {
+        return new Promise((resolve, _) => {
+            let api = new HttpApi(this.httpUrl);
+            let resp = api.call("/message/syncOfflineMessage", this.getRequestParams(), {
+                lastSequence,
+                maxLimit
+            })
             resolve(resp);
         })
     }

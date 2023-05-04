@@ -25,13 +25,11 @@ export default class HttpApi {
             reqUrl += paramStr
         }
 
-        let requestMethod = "POST"
-
         const headers = {
             'Content-Type': 'application/json'
         }
 
-        const request: any = {method: requestMethod, headers: headers, mode: 'cors', body: Beans.json(body)}
+        const request: any = {method: "POST", headers: headers, mode: 'cors', body: Beans.json(body)}
         return this.httpFetch(reqUrl, request)
 
     }
