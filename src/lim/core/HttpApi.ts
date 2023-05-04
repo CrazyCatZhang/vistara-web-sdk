@@ -48,7 +48,6 @@ export default class HttpApi {
         console.log("httpFetch")
 
         let system = WebToolkit.getDeviceInfo().system
-        system = 'UniApp';
 
         if (system === 'WxApp') {
             // @ts-ignore
