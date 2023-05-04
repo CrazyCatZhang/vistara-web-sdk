@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/lim.ts",
   "scripts": {
-    "build:weblib": "cross-env NODE_ENV=production platform=web webpack --mode=production --config ./build/webpack.lib.config.js",
+    "build:weblib": "set NODE_OPTIONS=--openssl-legacy-provider & cross-env NODE_ENV=production platform=web webpack --mode=production --config ./build/webpack.lib.config.js",
     "build:unilib": "cross-env NODE_ENV=production platform=uniapp webpack --mode=production --config ./build/webpack.lib.config.js",
-    "build:wxlib": "cross-env NODE_ENV=production platform=wx webpack --mode=production --config ./build/webpack.lib.config.js",
+    "build:wxlib": "set NODE_OPTIONS=--openssl-legacy-provider & cross-env NODE_ENV=production platform=wx webpack --mode=production --config ./build/webpack.lib.config.js",
     "tsc": "tsc",
     "rnlib": "node ./build/export-ts-lib",
     "test": "jest"

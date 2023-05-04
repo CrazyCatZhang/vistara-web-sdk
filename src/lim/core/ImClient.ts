@@ -8,14 +8,21 @@ import {RequestParams} from '../model/RequestParams';
 import HttpApi from './HttpApi';
 import Beans from '../common/utils';
 import {
+    ConversationEventCommand,
     FriendshipEventCommand,
     GroupEventCommand,
     MessageCommand,
     SystemCommand,
-    UserEventCommand,
-    ConversationEventCommand
+    UserEventCommand
 } from '../common/Command';
-import {MessagePack} from '../pack/MessagePack';
+import {
+    createAudioMessage, createCustomerMessage,
+    createEmojiMessage, createFileMessage,
+    createImageMessage, createLocationMessage,
+    createTextMessage,
+    createVideoMessage
+} from '../utils/CreateMessage'
+import ConversationType from "../common/ConversationType";
 
 const loginTimeout = 10 * 1000 // 10 seconds
 const heartbeatInterval = 10 * 1000 // seconds
@@ -545,21 +552,151 @@ export class ImClient {
         setTimeout(loop, 500)
     }
 
-
-    //构建单聊消息对象
-    public createP2PTextMessage(to: string, text: string) {
-        let messagePack = new MessagePack(this.appId);
-        messagePack.buildTextMessagePack(this.userId, to, text);
-        return messagePack;
-    }
-
-
-    public sendP2PMessage(pack: MessagePack) {
+    // 发送单聊文本消息
+    public sendP2PTextMessage(to: string, text: string) {
+        let pack = createTextMessage(this.appId, this.userId, to, text, ConversationType.P2PMessage)
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
         }
     }
+
+    // 发送单聊图片消息
+    public sendP2PImageMessage(to: string, image: any) {
+        let pack = createImageMessage(this.appId, this.userId, to, image, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊语音消息
+    public sendP2PAudioMessage(to: string, audio: any) {
+        let pack = createAudioMessage(this.appId, this.userId, to, audio, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊视频消息
+    public sendP2PVideoMessage(to: string, video: any) {
+        let pack = createVideoMessage(this.appId, this.userId, to, video, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊表情消息
+    public sendP2PEmojiMessage(to: string, emoji: any) {
+        let pack = createEmojiMessage(this.appId, this.userId, to, emoji, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊文件消息
+    public sendP2PFileMessage(to: string, file: any) {
+        let pack = createFileMessage(this.appId, this.userId, to, file, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊位置消息
+    public sendP2PLocationMessage(to: string, location: any) {
+        let pack = createLocationMessage(this.appId, this.userId, to, location, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送单聊自定义消息
+    public sendP2PCustomerMessage(to: string, type: number, custom: any) {
+        let pack = createCustomerMessage(this.appId, this.userId, to, type, custom, ConversationType.P2PMessage)
+        let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+
+    // 发送群聊文本消息
+    public sendGroupTextMessage(to: string, text: string) {
+        let pack = createTextMessage(this.appId, this.userId, to, text, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊图片消息
+    public sendGroupImageMessage(to: string, image: any) {
+        let pack = createImageMessage(this.appId, this.userId, to, image, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊语音消息
+    public sendGroupAudioMessage(to: string, audio: any) {
+        let pack = createAudioMessage(this.appId, this.userId, to, audio, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊视频消息
+    public sendGroupVideoMessage(to: string, video: any) {
+        let pack = createVideoMessage(this.appId, this.userId, to, video, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊表情消息
+    public sendGroupEmojiMessage(to: string, emoji: any) {
+        let pack = createEmojiMessage(this.appId, this.userId, to, emoji, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊文件消息
+    public sendGroupFileMessage(to: string, file: any) {
+        let pack = createFileMessage(this.appId, this.userId, to, file, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊位置消息
+    public sendGroupLocationMessage(to: string, location: any) {
+        let pack = createLocationMessage(this.appId, this.userId, to, location, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
+    // 发送群聊自定义消息
+    public sendGroupCustomerMessage(to: string, type: number, custom: any) {
+        let pack = createCustomerMessage(this.appId, this.userId, to, type, custom, ConversationType.GroupMessage)
+        let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
+        if (this.conn) {
+            this.conn.send(p2pPack.pack(false));
+        }
+    }
+
 
     public getUserId() {
         return this.userId;
