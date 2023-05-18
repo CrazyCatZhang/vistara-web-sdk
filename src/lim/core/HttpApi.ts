@@ -47,7 +47,7 @@ export default class HttpApi {
     private httpFetch(url: string, request: any): Promise<ApiResponse> {
         console.log("httpFetch")
 
-        let system = WebToolkit.getDeviceInfo().system
+        let system = "WebApp"
 
         if (system === 'WxApp') {
             // @ts-ignore

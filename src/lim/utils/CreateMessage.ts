@@ -57,6 +57,13 @@ let createCustomerMessage = function (appId: number, from: string, to: string, t
     return messagePack;
 }
 
+//创建请求视频通话消息
+let createVideoCallMessage = function (appId: number, from: string, to: string, type: number, msg: any, conversationType: ConversationType) {
+    let messagePack = new MessagePack(appId, conversationType);
+    messagePack.buildCustomerMessagePack(from, to, type, msg);
+    return messagePack;
+}
+
 export {
     createTextMessage,
     createImageMessage,
@@ -65,6 +72,7 @@ export {
     createEmojiMessage,
     createFileMessage,
     createLocationMessage,
-    createCustomerMessage
+    createCustomerMessage,
+    createVideoCallMessage
 }
 

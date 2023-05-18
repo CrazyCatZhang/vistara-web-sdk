@@ -5,9 +5,9 @@ import Logger from "../log/Logger";
 const Base64 = {
     _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     encode: function (e) {
-        var t = "";
-        var n, r, i, s, o, u, a;
-        var f = 0;
+        let t = "";
+        let n, r, i, s, o, u, a;
+        let f = 0;
         e = Base64._utf8_encode(e);
         while (f < e.length) {
             n = e.charCodeAt(f++);
@@ -27,10 +27,10 @@ const Base64 = {
         return t
     },
     decode: function (e) {
-        var t = "";
-        var n, r, i;
-        var s, o, u, a;
-        var f = 0;
+        let t = "";
+        let n, r, i;
+        let s, o, u, a;
+        let f = 0;
         e = e.replace(/[^A-Za-z0-9+/=]/g, "");
         while (f < e.length) {
             s = this._keyStr.indexOf(e.charAt(f++));
@@ -53,7 +53,7 @@ const Base64 = {
     },
     _utf8_encode: function (e) {
         e = e.replace(/rn/g, "n");
-        var t = "";
+        let t = "";
         for (var n = 0; n < e.length; n++) {
             var r = e.charCodeAt(n);
             if (r < 128) {
@@ -70,11 +70,10 @@ const Base64 = {
         return t
     },
     _utf8_decode: function (e) {
-        var t = "";
-        var n = 0;
-        var r = 0;
-        var c1 = 0;
-        var c2 = 0;
+        let t = "";
+        let n = 0;
+        let r = 0;
+        let c2 = 0;
         while (n < e.length) {
             r = e.charCodeAt(n);
             if (r < 128) {
@@ -191,7 +190,8 @@ export default class WebToolkit {
 
     // 动态加入script 到head 标签处
     private static loadJS(url, callback) {
-        var script: any = document.createElement('script'), fn = callback || function () {
+        let script: any = document.createElement('script'), fn = callback || function () {
+
         };
         script.type = 'text/javascript';
         // document.getElementsByTagName('head')[0].children[16].outerHTML.indexOf('http://pv.sohu.com/cityjson?ie=utf-8')
@@ -253,7 +253,6 @@ export default class WebToolkit {
 
     public static getIpInfo(callback) {
         /*WX_APP*/
-        // 小程序的情况需要把pv.sohu.com域名加入白名单中
         WebToolkit.getIpInfoByFetch(callback);
         /*WX_APP*/
 
@@ -266,7 +265,6 @@ export default class WebToolkit {
         /*RN_APP*/
 
         /*UNI_APP*/
-        // 小程序的情况需要把pv.sohu.com域名加入白名单中
         WebToolkit.getIpInfoByFetch(callback);
         /*UNI_APP*/
     }

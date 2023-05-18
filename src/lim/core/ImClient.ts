@@ -10,7 +10,7 @@ import Beans from '../common/utils';
 import {
     ConversationEventCommand,
     FriendshipEventCommand,
-    GroupEventCommand,
+    GroupEventCommand, MediaEventCommand,
     MessageCommand,
     SystemCommand,
     UserEventCommand
@@ -23,12 +23,14 @@ import {
     createImageMessage,
     createLocationMessage,
     createTextMessage,
+    createVideoCallMessage,
     createVideoMessage
 } from '../utils/CreateMessage'
 import ConversationType from "../common/ConversationType";
 import {MessageReadPack} from "../pack/MessageReadPack";
 import {MessageReceiveAckPack} from "../pack/MessageReceiveAckPack";
 import {MessageRecallPack} from "../pack/MessageRecallPack";
+import {im} from "../../lim";
 
 const loginTimeout = 10 * 1000 // 10 seconds
 const heartbeatInterval = 10 * 1000 // seconds
@@ -107,6 +109,14 @@ export interface IListener {
     onUserCustomStatusChangeNotify(e: any): void;// 用户自身在线状态更改通知
     onConversationDelete(e: any): void;// 删除会话通知
     onConversationUpdate(e: any): void;// 更新会话通知
+    onCallVideo(e: any): void;// 视频通话请求
+    onAcceptCall(e: any): void;// 接收通话
+    onRejectCall(e: any): void;// 拒绝通话
+    onHangUpCall(e: any): void;// 挂断通话
+    onCancelCall(e: any): void;// 取消通话
+    onTransmitIce(e: any): void;// 同步ICE
+    onTransmitOffer(e: any): void;// 发送Offer
+    onTransmitAnswer(e: any): void;// 发送Answer
     // onOfflineMessage(data):void; // 拉取到离线消息事件
 }
 
@@ -425,6 +435,38 @@ export class ImClient {
                     // 沟通信会话通知
                     if (typeof imClient.listeners.onConversationUpdate === 'function') {
                         imClient.listeners.onConversationUpdate(msgBody)
+                    }
+                } else if (command === MediaEventCommand.CALL_VIDEO) {
+                    if (typeof imClient.listeners.onCallVideo === 'function') {
+                        imClient.listeners.onCallVideo(msgBody)
+                    }
+                } else if (command === MediaEventCommand.ACCEPT_CALL) {
+                    if (typeof imClient.listeners.onAcceptCall === 'function') {
+                        imClient.listeners.onAcceptCall(msgBody)
+                    }
+                } else if (command === MediaEventCommand.REJECT_CALL) {
+                    if (typeof imClient.listeners.onRejectCall === 'function') {
+                        imClient.listeners.onRejectCall(msgBody)
+                    }
+                } else if (command === MediaEventCommand.HANG_UP) {
+                    if (typeof imClient.listeners.onHangUpCall === 'function') {
+                        imClient.listeners.onHangUpCall(msgBody)
+                    }
+                } else if (command === MediaEventCommand.CANCEL_CALL) {
+                    if (typeof imClient.listeners.onCancelCall === 'function') {
+                        imClient.listeners.onCancelCall(msgBody)
+                    }
+                } else if (command === MediaEventCommand.TRANSMIT_ICE) {
+                    if (typeof imClient.listeners.onTransmitIce === 'function') {
+                        imClient.listeners.onTransmitIce(msgBody)
+                    }
+                } else if (command === MediaEventCommand.TRANSMIT_OFFER) {
+                    if (typeof imClient.listeners.onTransmitOffer === 'function') {
+                        imClient.listeners.onTransmitOffer(msgBody)
+                    }
+                } else if (command === MediaEventCommand.TRANSMIT_ANSWER) {
+                    if (typeof imClient.listeners.onTransmitAnswer === 'function') {
+                        imClient.listeners.onTransmitAnswer(msgBody)
                     }
                 }
             }
@@ -1109,6 +1151,7 @@ export class ImClient {
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
         }
+        return pack
     }
 
     // 发送单聊图片消息
@@ -1117,6 +1160,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1126,6 +1170,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1135,6 +1180,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1144,6 +1190,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1153,6 +1200,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1162,6 +1210,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1171,6 +1220,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(MessageCommand.MSG_P2P, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1181,6 +1231,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1190,6 +1241,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1199,6 +1251,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1208,6 +1261,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1217,6 +1271,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1226,6 +1281,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1235,6 +1291,7 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
         }
     }
 
@@ -1244,6 +1301,79 @@ export class ImClient {
         let p2pPack = imClient.buildMessagePack(GroupEventCommand.MSG_GROUP, pack);
         if (this.conn) {
             this.conn.send(p2pPack.pack(false));
+            return pack
+        }
+    }
+
+    public requestVideoCall(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.CALL_VIDEO, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public acceptVideoCall(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.ACCEPT_CALL, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public rejectVideoCall(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.REJECT_CALL, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public hangUpVideoCall(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.HANG_UP, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public transmitIce(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.TRANSMIT_ICE, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public transmitOffer(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.TRANSMIT_OFFER, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public transmitAnswer(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.TRANSMIT_ANSWER, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
+        }
+    }
+
+    public cancelVideoCall(to: string, msg: any) {
+        let pack = createVideoCallMessage(this.appId, this.userId, to, 5, msg, ConversationType.P2PMessage)
+        let videoPack = imClient.buildMessagePack(MediaEventCommand.CANCEL_CALL, pack)
+        if (this.conn) {
+            this.conn.send(videoPack.pack(false))
+            return pack
         }
     }
 
